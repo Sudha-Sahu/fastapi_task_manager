@@ -2,8 +2,22 @@ from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
 from models import Task, SessionLocal, engine
 from schemas import TaskCreate, TaskResponse
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+
+origins = [
+    "http://localhost:4200",  # Angular dev server
+    "http://127.0.0.1:4200"   # sometimes Angular runs on 127.0.0.1
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,          # allow specific origins
+    allow_credentials=True,
+    allow_methods=["*"],            # allow all HTTP methods (GET, POST, etc.)
+    allow_headers=["*"],            # allow all headers (Content-Type, Authorization, etc.)
+)
 
 # Dependency to get DB session
 def get_db():
